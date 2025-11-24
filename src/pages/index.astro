@@ -3,41 +3,19 @@ import Layout from '../layouts/Layout.astro';
 import ReactCore from '../components/ReactCore.jsx';
 import VueHabitat from '../components/VueHabitat.vue';
 import SvelteThruster from '../components/SvelteThruster.svelte';
-import { Zap, Layers, Box, Globe, ChevronDown } from 'lucide-react';
+import { Zap, Layers, Box, Globe, ChevronDown, FileCode, FolderOpen, Activity } from 'lucide-react';
 
-// Static Data for "Pros" Cards
 const pros = [
-    {
-        title: "Islands Architecture",
-        desc: "Component-level isolation. One crash doesn't sink the ship.",
-        icon: Box,
-        color: "text-blue-400"
-    },
-    {
-        title: "Zero JS Default",
-        desc: "Static HTML is generated unless you explicitly ask for interactivity.",
-        icon: Zap,
-        color: "text-yellow-400"
-    },
-    {
-        title: "UI Agnostic",
-        desc: "Bring your own framework. React, Vue, Svelte side-by-side.",
-        icon: Layers,
-        color: "text-purple-400"
-    },
-    {
-        title: "Edge Ready",
-        desc: "Server-side rendering capabilities for global distribution.",
-        icon: Globe,
-        color: "text-emerald-400"
-    }
+    { title: "Islands Architecture", desc: "Component isolation. One crash doesn't sink the ship.", icon: Box, color: "text-blue-400" },
+    { title: "Zero JS Default", desc: "Pure HTML by default. JS only where strictly needed.", icon: Zap, color: "text-yellow-400" },
+    { title: "UI Agnostic", desc: "React, Vue, Svelte running side-by-side.", icon: Layers, color: "text-purple-400" },
+    { title: "Edge Ready", desc: "Server-side rendering for global distribution.", icon: Globe, color: "text-emerald-400" }
 ];
 ---
 
 <Layout title="Nebula Station | Astro">
-    <!-- HERO SECTION -->
+    <!-- HERO -->
 	<header class="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 border-b border-white/5">
-        <!-- Orbital Ring Decoration -->
         <div class="absolute w-[600px] h-[600px] rounded-full border border-white/5 animate-pulse-slow pointer-events-none"></div>
         <div class="absolute w-[800px] h-[800px] rounded-full border border-white/5 opacity-50 pointer-events-none"></div>
         
@@ -57,53 +35,167 @@ const pros = [
             
             <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
                 Astro sends <span class="text-white font-semibold">HTML</span> over the wire. 
-                JavaScript is only loaded for the interactive "Islands" you see below. 
-                Everything else is void.
+                JavaScript is only loaded for the interactive "Islands" you see below.
             </p>
 
             <div class="mt-10 flex gap-4 justify-center">
-                <a href="#islands" class="px-6 py-3 bg-white text-void-950 font-bold rounded-lg hover:bg-slate-200 transition-colors">
-                    Inspect Modules
-                </a>
-                <a href="https://astro.build" target="_blank" class="px-6 py-3 bg-white/5 border border-white/10 text-white rounded-lg hover:bg-white/10 transition-colors backdrop-blur-sm">
-                    Read Docs
+                <a href="#schematics" class="px-6 py-3 bg-white text-void-950 font-bold rounded-lg hover:bg-slate-200 transition-colors">
+                    View Schematics
                 </a>
             </div>
         </div>
-
-        <div class="absolute bottom-10 animate-bounce text-slate-500">
-            <ChevronDown />
-        </div>
+        <div class="absolute bottom-10 animate-bounce text-slate-500"><ChevronDown /></div>
 	</header>
 
-    <!-- PROS GRID -->
-    <section class="py-24 px-6 border-b border-white/5 bg-void-900/50">
+    <!-- SECTION 1: SYSTEM SCHEMATICS (Project Structure) -->
+    <section id="schematics" class="py-24 px-6 border-b border-white/5 bg-void-900/50">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold mb-4">Why we built the Station</h2>
-                <p class="text-slate-400">Key advantages of the Astro Framework</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {pros.map(p => (
-                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-300 group">
-                        <div class={`p-3 rounded-lg bg-void-950 w-fit mb-4 ${p.color}`}>
-                            <p.icon size={24} />
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-starlight group-hover:text-white">{p.title}</h3>
-                        <p class="text-sm text-slate-400 leading-relaxed">{p.desc}</p>
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                
+                <!-- Text Description -->
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center gap-3">
+                        <FolderOpen className="text-astro" />
+                        System Schematics
+                    </h2>
+                    <p class="text-slate-400 mb-6 leading-relaxed">
+                        Astro acts as the gravitational center. Notice how 
+                        <span class="text-react font-bold">React</span>, 
+                        <span class="text-vue font-bold">Vue</span>, and 
+                        <span class="text-svelte font-bold">Svelte</span> 
+                        components coexist in the same <code>src/components</code> folder.
+                        They are imported into a standard <code>.astro</code> page and rendered seamlessly.
+                    </p>
+                    <div class="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                        <h4 class="text-blue-400 font-bold text-sm mb-2">The Integration Layer</h4>
+                        <code class="text-xs text-blue-200 font-mono block">
+                            import react from '@astrojs/react';<br/>
+                            import vue from '@astrojs/vue';<br/>
+                            import svelte from '@astrojs/svelte';
+                        </code>
                     </div>
-                ))}
+                </div>
+
+                <!-- Visual File Tree -->
+                <div class="flex-1 w-full max-w-md bg-void-950 border border-white/10 rounded-xl p-6 font-mono text-sm shadow-2xl relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+                    
+                    <!-- File Tree Items -->
+                    <div class="space-y-3 relative z-10">
+                        <div class="flex items-center gap-2 text-slate-500"><FolderOpen size={16} /> src/</div>
+                        
+                        <div class="pl-6 space-y-3 border-l border-white/10 ml-2">
+                            <div class="flex items-center gap-2 text-slate-500"><FolderOpen size={16} /> components/</div>
+                            
+                            <div class="pl-6 space-y-2 border-l border-white/10 ml-2">
+                                <div class="flex items-center gap-2 text-react group/item">
+                                    <FileCode size={14} /> 
+                                    <span class="group-hover/item:translate-x-1 transition-transform">ReactCore.jsx</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-vue group/item">
+                                    <FileCode size={14} /> 
+                                    <span class="group-hover/item:translate-x-1 transition-transform">VueHabitat.vue</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-svelte group/item">
+                                    <FileCode size={14} /> 
+                                    <span class="group-hover/item:translate-x-1 transition-transform">SvelteThruster.svelte</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 text-slate-500 mt-4"><FolderOpen size={16} /> pages/</div>
+                            <div class="pl-6 border-l border-white/10 ml-2">
+                                <div class="flex items-center gap-2 text-astro">
+                                    <FileCode size={14} /> index.astro
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 text-yellow-400 mt-4"><FileCode size={16} /> astro.config.mjs</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- THE ISLANDS DEMO -->
+    <!-- SECTION 2: HYDRATION TELEMETRY (Performance) -->
+    <section class="py-24 px-6 border-b border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4 flex items-center justify-center gap-3">
+                    <Activity className="text-emerald-400" />
+                    Hydration Telemetry
+                </h2>
+                <p class="text-slate-400">Visualizing the "Waterfall" of network activity.</p>
+            </div>
+
+            <!-- The Waterfall Chart -->
+            <div class="bg-void-950 border border-white/10 rounded-xl p-8 relative overflow-hidden">
+                <div class="absolute top-0 bottom-0 left-[150px] w-px bg-white/10 z-0"></div> <!-- Axis line -->
+                
+                <div class="space-y-8 relative z-10 font-mono text-xs">
+                    
+                    <!-- Timeline Header -->
+                    <div class="flex pl-[150px] text-slate-600 mb-6">
+                        <div class="flex-1">0ms (Load)</div>
+                        <div class="flex-1 text-center">2s (Idle)</div>
+                        <div class="flex-1 text-right">User Scroll (Visible)</div>
+                    </div>
+
+                    <!-- Row 1: HTML (Base) -->
+                    <div class="flex items-center group">
+                        <div class="w-[140px] text-slate-400 text-right pr-4">HTML (Astro)</div>
+                        <div class="flex-1 h-8 bg-slate-900/50 rounded flex items-center relative overflow-hidden">
+                            <div class="absolute left-0 w-[5%] h-full bg-astro/50 border-r border-astro shadow-[0_0_10px_rgba(188,82,238,0.5)]"></div>
+                            <span class="ml-[6%] text-astro">Initial Payload (Static)</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: React (Load) -->
+                    <div class="flex items-center group">
+                        <div class="w-[140px] text-react text-right pr-4">React Core</div>
+                        <div class="flex-1 h-8 bg-slate-900/50 rounded flex items-center relative">
+                            <!-- Immediate execution -->
+                            <div class="absolute left-0 w-[20%] h-full bg-react/20 border border-react/40 rounded-r"></div>
+                            <div class="absolute left-0 w-1 h-full bg-react"></div>
+                            <span class="ml-4 text-react opacity-50 group-hover:opacity-100 transition-opacity">client:load (Immediate Hydration)</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Svelte (Idle) -->
+                    <div class="flex items-center group">
+                        <div class="w-[140px] text-svelte text-right pr-4">Svelte Thruster</div>
+                        <div class="flex-1 h-8 bg-slate-900/50 rounded flex items-center relative">
+                            <!-- Delayed execution -->
+                            <div class="absolute left-0 w-[40%] h-[1px] border-t border-dashed border-slate-700"></div>
+                            <div class="absolute left-[40%] w-[15%] h-full bg-svelte/20 border border-svelte/40 rounded"></div>
+                            <div class="absolute left-[40%] w-1 h-full bg-svelte"></div>
+                            <span class="ml-[42%] text-svelte opacity-50 group-hover:opacity-100 transition-opacity">client:idle (Waits for CPU idle)</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Vue (Visible) -->
+                    <div class="flex items-center group">
+                        <div class="w-[140px] text-vue text-right pr-4">Vue Habitat</div>
+                        <div class="flex-1 h-8 bg-slate-900/50 rounded flex items-center relative">
+                            <!-- Very delayed execution -->
+                            <div class="absolute left-0 w-[80%] h-[1px] border-t border-dashed border-slate-700"></div>
+                            <div class="absolute left-[80%] w-[15%] h-full bg-vue/20 border border-vue/40 rounded"></div>
+                            <div class="absolute left-[80%] w-1 h-full bg-vue"></div>
+                            <span class="ml-[82%] text-vue opacity-50 group-hover:opacity-100 transition-opacity">client:visible (Lazy Load)</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: THE ISLANDS (Existing) -->
 	<main id="islands" class="py-24 px-6 max-w-7xl mx-auto">
         <div class="flex justify-between items-end mb-12">
             <div>
                 <h2 class="text-3xl font-bold text-white">Interactive Modules</h2>
-                <p class="text-slate-400 mt-2">Hydrated on-demand. The rest of this page is 0kb JS.</p>
+                <p class="text-slate-400 mt-2">The components below map to the telemetry chart above.</p>
             </div>
             <div class="hidden md:flex gap-2 text-xs font-mono text-slate-500">
                 <span class="flex items-center gap-1"><div class="w-2 h-2 bg-react rounded-full"></div>REACT</span>
@@ -113,66 +205,35 @@ const pros = [
         </div>
 
 		<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-auto lg:h-[450px]">
-            
-            <!-- REACT DOCK -->
+            <!-- REACT -->
             <div class="relative group">
                 <div class="absolute -inset-0.5 bg-gradient-to-b from-react to-blue-900 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur"></div>
                 <div class="relative h-full bg-void-900 rounded-xl border border-white/10 p-1 flex flex-col">
                     <div class="bg-void-950/50 flex-grow rounded-lg p-6 backdrop-blur-xl">
                         <ReactCore client:load />
                     </div>
-                    <div class="p-3 text-center border-t border-white/5">
-                        <code class="text-[10px] text-slate-500 bg-black/40 px-2 py-1 rounded">client:load</code>
-                        <span class="text-[10px] text-slate-600 ml-2">Hydrates immediately</span>
-                    </div>
                 </div>
             </div>
 
-            <!-- VUE DOCK -->
+            <!-- VUE -->
             <div class="relative group mt-8 lg:mt-0">
                 <div class="absolute -inset-0.5 bg-gradient-to-b from-vue to-emerald-900 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur"></div>
                 <div class="relative h-full bg-void-900 rounded-xl border border-white/10 p-1 flex flex-col">
                     <div class="bg-void-950/50 flex-grow rounded-lg p-6 backdrop-blur-xl">
                         <VueHabitat client:visible />
                     </div>
-                    <div class="p-3 text-center border-t border-white/5">
-                        <code class="text-[10px] text-slate-500 bg-black/40 px-2 py-1 rounded">client:visible</code>
-                        <span class="text-[10px] text-slate-600 ml-2">Hydrates when seen</span>
-                    </div>
                 </div>
             </div>
 
-            <!-- SVELTE DOCK -->
+            <!-- SVELTE -->
             <div class="relative group">
                 <div class="absolute -inset-0.5 bg-gradient-to-b from-svelte to-orange-900 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur"></div>
                 <div class="relative h-full bg-void-900 rounded-xl border border-white/10 p-1 flex flex-col">
                     <div class="bg-void-950/50 flex-grow rounded-lg p-6 backdrop-blur-xl">
                         <SvelteThruster client:idle />
                     </div>
-                    <div class="p-3 text-center border-t border-white/5">
-                        <code class="text-[10px] text-slate-500 bg-black/40 px-2 py-1 rounded">client:idle</code>
-                        <span class="text-[10px] text-slate-600 ml-2">Hydrates when idle</span>
-                    </div>
                 </div>
             </div>
-
 		</div>
-
-        <!-- TELEMETRY FOOTER -->
-        <div class="mt-24 p-6 rounded-xl border border-white/5 bg-void-950/80 font-mono text-xs text-slate-500 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex gap-8">
-                <div>
-                    <span class="block text-slate-700 uppercase tracking-wider mb-1">Status</span>
-                    <span class="text-emerald-500">● OPERATIONAL</span>
-                </div>
-                <div>
-                    <span class="block text-slate-700 uppercase tracking-wider mb-1">Rendering</span>
-                    <span class="text-astro">SERVER-FIRST</span>
-                </div>
-            </div>
-            <div>
-                SESSION ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}
-            </div>
-        </div>
 	</main>
 </Layout>
