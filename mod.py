@@ -1,5 +1,7 @@
 import os
+import re
 import sys
+import json
 
 # STRICT DEPENDENCY: Relying on the existing file_ops module.
 try:
@@ -8,52 +10,61 @@ except ImportError:
     print("[CRITICAL]: 'file_ops.py' not found. This script relies on the FileOps utility.")
     sys.exit(1)
 
-def force_fix_hono_endpoint():
+def undo_ssr_changes():
     """
-    Forces the update of the Hono endpoint configuration using update_file
-    to bypass the existence check that failed previously.
+    Reverts the project to Static Site Generation (SSG).
+    Removes Vercel/Node adapters and Hono backend logic.
     """
     ops = FileOps()
     
-    # Path to the Hono endpoint file
-    hono_file_path = os.path.join("src", "pages", "api", "hono", "[...route].js")
-    
-    # The corrected Hono endpoint code with basePath
-    corrected_hono_code = r"""
-import { Hono } from 'hono';
+    # Paths
+    config_path = "astro.config.mjs"
+    pkg_path = "package.json"
 
-// Initialize Hono with the correct base path relative to where this file lives in 'src/pages'
-const app = new Hono().basePath('/api/hono');
+    # ---------------------------------------------------------
+    # STEP 1: Revert package.json dependencies
+    # ---------------------------------------------------------
+    pkg_content = ops.read_file(pkg_path)
+    if pkg_content:
+        pkg_json = json.loads(pkg_content)
+        deps = pkg_json.get("dependencies", {})
+        
+        # Remove SSR packages
+        keys_to_remove = ["@astrojs/vercel", "@astrojs/node", "hono"]
+        for key in keys_to_remove:
+            if key in deps:
+                del deps[key]
+                print(f"[INFO]: Removed {key} from dependencies.")
+            
+        pkg_json["dependencies"] = deps
+        ops.update_file(pkg_path, json.dumps(pkg_json, indent=2))
+        print("[SUCCESS]: Reverted package.json to static dependencies")
 
-app.get('/data', async (c) => {
-  // Simulate database processing latency
-  await new Promise(resolve => setTimeout(resolve, 800));
-
-  return c.json({
-    message: "Data fetched from Hono Router",
-    timestamp: new Date().toISOString(),
-    framework: "Hono",
-    status: 200
-  });
-});
-
-// Catch-all route to handle 404s within the Hono app context gracefully
-app.all('*', (c) => {
-    return c.json({ error: "Route not found in Hono app", path: c.req.path }, 404);
-});
-
-export const ALL = ({ request }) => app.fetch(request);
-"""
-
-    # Use update_file since the file exists
-    if ops.update_file(hono_file_path, corrected_hono_code):
-        print("[SUCCESS]: Forced update of src/pages/api/hono/[...route].js with correct basePath.")
-    else:
-        # Fallback: create if it somehow doesn't exist (race condition safety)
-        if ops.create_file(hono_file_path, corrected_hono_code):
-             print("[SUCCESS]: Created src/pages/api/hono/[...route].js")
-        else:
-             print("[ERROR]: Failed to write Hono endpoint file.")
+    # ---------------------------------------------------------
+    # STEP 2: Revert astro.config.mjs
+    # ---------------------------------------------------------
+    config_content = ops.read_file(config_path)
+    if config_content:
+        # Remove imports for adapters
+        config_content = re.sub(r"import\s+node\s+from\s+['\"]@astrojs/node['\"];\n?", "", config_content)
+        config_content = re.sub(r"import\s+vercel\s+from\s+['\"]@astrojs/vercel['\"];\n?", "", config_content)
+        
+        # Remove output: 'server' and adapter configuration
+        # This regex looks for the object inside defineConfig and cleans it up
+        # It's safer to just rewrite the config to a known static state if the regex is too complex/risky
+        # or we can target specific lines.
+        
+        # Attempt to remove output: 'server'
+        config_content = re.sub(r"\s*output:\s*['\"]server['\"],?", "", config_content)
+        
+        # Attempt to remove adapter calls
+        config_content = re.sub(r"\s*adapter:\s*node\(\{.*?\}\),?", "", config_content, flags=re.DOTALL)
+        config_content = re.sub(r"\s*adapter:\s*vercel\(\),?", "", config_content)
+        
+        # Clean up empty lines or trailing commas if needed (simple approach)
+        
+        ops.update_file(config_path, config_content)
+        print("[SUCCESS]: Reverted astro.config.mjs to static configuration")
 
 if __name__ == "__main__":
-    force_fix_hono_endpoint()
+    undo_ssr_changes()
