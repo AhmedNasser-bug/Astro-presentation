@@ -1,0 +1,58 @@
+---
+import InteractiveMockup from '../components/InteractiveMockup.jsx';
+---
+
+<section class="relative py-24 px-6 border-b border-white/5 overflow-hidden">
+    <!-- Clean, Lighter Background Accent for "Design" feel -->
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none"></div>
+    
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10">
+        
+        <!-- Text Content -->
+        <div class="flex-1 space-y-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300 text-xs font-mono">
+                <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                ARCHITECTURAL DECISIONS
+            </div>
+
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                How much JavaScript should you ship?
+            </h2>
+
+            <div class="space-y-6 text-lg text-slate-400 leading-relaxed">
+                <p>
+                    In a traditional application, the entire page is wrapped in JavaScript. 
+                    Even the static footer pays the hydration tax.
+                </p>
+                <p>
+                    <strong class="text-astro text-xl">Islands Architecture</strong> changes the equation. 
+                    We carve out the interactive bits—share buttons, comments, carousels—and 
+                    let the rest of the page be pure, lightweight HTML.
+                </p>
+            </div>
+
+            <ul class="space-y-3 font-mono text-sm text-slate-300 mt-4">
+                <li class="flex items-center gap-3">
+                    <div class="w-1.5 h-1.5 bg-astro rounded-full"></div>
+                    Header & Footer → 0kb JS
+                </li>
+                <li class="flex items-center gap-3">
+                    <div class="w-1.5 h-1.5 bg-astro rounded-full"></div>
+                    Article Text → 0kb JS
+                </li>
+                <li class="flex items-center gap-3 text-white">
+                    <div class="w-1.5 h-1.5 bg-green-400 rounded-full shadow-[0_0_8px_#4ade80]"></div>
+                    Interactivity → Loaded On-Demand
+                </li>
+            </ul>
+        </div>
+
+        <!-- Interactive Island -->
+        <div class="flex-1 w-full">
+            <!-- Glass container for the island -->
+            <div class="p-2 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <InteractiveMockup client:visible />
+            </div>
+        </div>
+    </div>
+</section>

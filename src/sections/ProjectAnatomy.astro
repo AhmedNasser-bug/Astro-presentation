@@ -1,0 +1,36 @@
+---
+import FileStructureViewer from '../components/FileStructureViewer.jsx';
+import { Code2, Microscope } from 'lucide-react';
+---
+
+<section class="relative py-24 px-6 border-b border-white/5 bg-void-900">
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div class="space-y-4 max-w-2xl">
+                <div className="inline-flex items-center gap-2 text-blue-400 mb-2">
+                    <Microscope className="w-5 h-5" />
+                    <span class="text-xs font-mono font-bold tracking-widest uppercase">Structural Forensics</span>
+                </div>
+                
+                <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                    Behind the Bundle: <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">The Boilerplate</span>
+                </h2>
+                
+                <p class="text-slate-400">
+                    Why is the bundle so big? It's not your code. It's the runtime.
+                    Compare the file structures required just to render a simple page.
+                </p>
+            </div>
+        </div>
+
+        <!-- The Interactive Island -->
+        <div class="p-1 rounded-3xl bg-gradient-to-b from-white/10 to-transparent">
+            <div class="bg-void-950/80 backdrop-blur-xl rounded-[22px] p-6 md:p-8 border border-white/5">
+                <FileStructureViewer client:visible />
+            </div>
+        </div>
+
+    </div>
+</section>

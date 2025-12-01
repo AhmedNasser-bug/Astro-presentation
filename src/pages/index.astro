@@ -4,7 +4,12 @@ import ReactCore from '../components/ReactCore.jsx';
 import VueHabitat from '../components/VueHabitat.vue';
 import SvelteThruster from '../components/SvelteThruster.svelte';
 import { Zap, Layers, Box, Globe, ChevronDown, FileCode, FolderOpen, Activity } from 'lucide-react';
-
+import Hero from '../sections/Hero.astro';
+import TheSolution from '../sections/TheSolution.astro';
+import TheProblem from '../sections/TheProblem.astro';
+import BlogpostProb from '../sections/BlogpostProb.astro';
+import ProjectAnatomy from '../sections/ProjectAnatomy.astro';
+import PrncplesSection from '../sections/PrncplesSection.astro';
 const pros = [
     { title: "Islands Architecture", desc: "Component isolation. One crash doesn't sink the ship.", icon: Box, color: "text-blue-400" },
     { title: "Zero JS Default", desc: "Pure HTML by default. JS only where strictly needed.", icon: Zap, color: "text-yellow-400" },
@@ -14,39 +19,13 @@ const pros = [
 ---
 
 <Layout title="Astro showcase">
-    <!-- HERO -->
-	<header class="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 border-b border-white/5">
-        <div class="absolute w-[600px] h-[600px] rounded-full border border-white/5 animate-pulse-slow pointer-events-none"></div>
-        <div class="absolute w-[800px] h-[800px] rounded-full border border-white/5 opacity-50 pointer-events-none"></div>
-        
-        <div class="relative z-10 max-w-4xl mx-auto">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-astro/10 border border-astro/20 text-astro text-xs font-mono mb-8 backdrop-blur-md">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-astro opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-astro"></span>
-                </span>
-                SYSTEM ONLINE: ASTRO 4.0
-            </div>
-
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50">
-                The Architecture of <br />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-astro to-blue-500">Pure Performance</span>
-            </h1>
-            
-            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                Astro sends <span class="text-white font-semibold">HTML</span> over the wire. 
-                JavaScript is only loaded for the interactive "Islands" you see below.
-            </p>
-
-            <div class="mt-10 flex gap-4 justify-center">
-                <a href="#schematics" class="px-6 py-3 bg-white text-void-950 font-bold rounded-lg hover:bg-slate-200 transition-colors">
-                    View Schematics
-                </a>
-            </div>
-        </div>
-        <div class="absolute bottom-10 animate-bounce text-slate-500"><ChevronDown /></div>
-	</header>
-
+    
+    <Hero/>
+    <TheProblem/>
+    <TheSolution/>
+    <BlogpostProb/>
+    <ProjectAnatomy />
+    <PrncplesSection/>
     <!-- SECTION 1: SYSTEM SCHEMATICS (Project Structure) -->
     <section id="schematics" class="py-24 px-6 border-b border-white/5 bg-void-900/50">
         <div class="max-w-7xl mx-auto">
