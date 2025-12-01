@@ -39,6 +39,11 @@ export default function BackendReal() {
     try {
         const start = performance.now();
         const res = await fetch(endpoint.url);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
         const json = await res.json();
         const end = performance.now();
         

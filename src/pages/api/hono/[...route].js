@@ -9,7 +9,7 @@ app.get('/data', async (c) => {
   await new Promise(resolve => setTimeout(resolve, 800));
 
   return c.json({
-    message: "Data fetched from Hono Router",
+    message: "Data fetched from Hono Router (Vercel Edge/Serverless)",
     timestamp: new Date().toISOString(),
     framework: "Hono",
     status: 200
