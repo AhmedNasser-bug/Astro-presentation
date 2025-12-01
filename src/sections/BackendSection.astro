@@ -1,0 +1,33 @@
+---
+import BackendAgnostic from '../components/BackendAgnostic.jsx';
+import { ServerCog } from 'lucide-react';
+---
+
+<section class="relative py-32 px-6 border-b border-white/5 bg-void-900 overflow-hidden">
+    <!-- Ambient Blue/Cyber Glow -->
+    <div class="absolute top-0 right-0 w-2/3 h-full bg-blue-900/5 blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        
+        <!-- Header -->
+        <div class="text-center max-w-4xl mx-auto mb-20">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-8 uppercase tracking-widest">
+                <ServerCog size={14} />
+                Data Layer
+            </div>
+            
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">
+                Bring Your Own <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Content</span>
+            </h2>
+            
+            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Astro doesn't care where your content lives. 
+                Headless CMS, Database, or Markdown—it all compiles to the same fast HTML.
+            </p>
+        </div>
+
+        <!-- The Pipeline Visualization -->
+        <BackendAgnostic client:visible />
+
+    </div>
+</section>

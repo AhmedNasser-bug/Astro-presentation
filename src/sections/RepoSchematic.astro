@@ -1,0 +1,78 @@
+---
+import { FolderOpen, FileCode } from 'lucide-react';
+---
+<!-- SECTION 1: SYSTEM SCHEMATICS (Project Structure) -->
+    <section id="schematics" class="py-24 px-6 border-b border-white/5 bg-void-900/50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                
+                <!-- Text Description -->
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center gap-3">
+                        <FolderOpen className="text-astro" />
+                        System Schematics
+                    </h2>
+                    <p class="text-slate-400 mb-6 leading-relaxed">
+                        Astro acts as the gravitational center. Notice how 
+                        <span class="text-react font-bold">React</span>, 
+                        <span class="text-vue font-bold">Vue</span>, and 
+                        <span class="text-svelte font-bold">Svelte</span> 
+                        components coexist in the same <code>src/components</code> folder.
+                        They are imported into a standard <code>.astro</code> page and rendered seamlessly.
+                    </p>
+                    <div class="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                        <h4 class="text-blue-400 font-bold text-sm mb-2">The Integration Layer</h4>
+                        <code class="text-xs text-blue-200 font-mono block">
+                            import react from '@astrojs/react';<br/>
+                            import vue from '@astrojs/vue';<br/>
+                            import svelte from '@astrojs/svelte';
+import SeparationSection from '../sections/SeparationSection.astro';
+import HowItWorksSection from '../sections/HowItWorksSection.astro';
+import PlotTwistSection from '../sections/PlotTwistSection.astro';
+import IntegrationSection from '../sections/IntegrationSection.astro';
+import RealWorldSection from '../sections/RealWorldSection.astro';
+import RealNumbersSection from '../sections/RealNumbersSection.astro';
+                        </code>
+                    </div>
+                </div>
+
+                <!-- Visual File Tree -->
+                <div class="flex-1 w-full max-w-md bg-void-950 border border-white/10 rounded-xl p-6 font-mono text-sm shadow-2xl relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+                    
+                    <!-- File Tree Items -->
+                    <div class="space-y-3 relative z-10">
+                        <div class="flex items-center gap-2 text-slate-500"><FolderOpen size={16} /> src/</div>
+                        
+                        <div class="pl-6 space-y-3 border-l border-white/10 ml-2">
+                            <div class="flex items-center gap-2 text-slate-500"><FolderOpen size={16} /> components/</div>
+                            
+                            <div class="pl-6 space-y-2 border-l border-white/10 ml-2">
+                                <div class="flex items-center gap-2 text-react group/item">
+                                    <FileCode size={14} /> 
+                                    <span class="group-hover/item:translate-x-1 transition-transform">ReactCore.jsx</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-vue group/item">
+                                    <FileCode size={14} /> 
+                                    <span class="group-hover/item:translate-x-1 transition-transform">VueHabitat.vue</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-svelte group/item">
+                                    <FileCode size={14} /> 
+                                    <span class="group-hover/item:translate-x-1 transition-transform">SvelteThruster.svelte</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 text-slate-500 mt-4"><FolderOpen size={16} /> pages/</div>
+                            <div class="pl-6 border-l border-white/10 ml-2">
+                                <div class="flex items-center gap-2 text-astro">
+                                    <FileCode size={14} /> index.astro
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 text-yellow-400 mt-4"><FileCode size={16} /> astro.config.mjs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

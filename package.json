@@ -23,6 +23,8 @@
     "framer-motion": "^10.0.0",
     "lucide-react": "^0.292.0",
     "clsx": "^2.0.0",
-    "tailwind-merge": "^2.0.0"
+    "tailwind-merge": "^2.0.0",
+    "@astrojs/node": "^8.2.0",
+    "hono": "^4.0.0"
   }
 }

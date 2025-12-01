@@ -1,0 +1,33 @@
+---
+import RealNumbers from '../components/RealNumbers.jsx';
+import { BarChart3 } from 'lucide-react';
+---
+
+<section class="relative py-32 px-6 border-b border-white/5 bg-void-950 overflow-hidden">
+    <!-- Ambient Green Glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-emerald-900/5 blur-[100px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        
+        <!-- Header -->
+        <div class="text-center max-w-4xl mx-auto mb-20">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800 border border-white/10 text-slate-300 text-xs font-mono font-bold mb-8 uppercase tracking-widest">
+                <BarChart3 size={14} />
+                Hard Data
+            </div>
+            
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">
+                Real <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-500">Numbers</span>
+            </h2>
+            
+            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                These aren't theoretical benchmarks. These are production migrations 
+                from major tech companies.
+            </p>
+        </div>
+
+        <!-- The Data Visualization -->
+        <RealNumbers client:visible />
+
+    </div>
+</section>

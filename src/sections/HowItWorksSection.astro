@@ -1,0 +1,30 @@
+---
+import CodeComparison from '../components/CodeComparison.jsx';
+import { Terminal } from 'lucide-react';
+---
+
+<section class="relative py-32 px-6 border-b border-white/5 bg-void-950 overflow-hidden">
+    <div class="max-w-7xl mx-auto relative z-10">
+        
+        <!-- Header -->
+        <div class="text-center max-w-4xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold mb-8 uppercase tracking-widest">
+                <Terminal size={14} />
+                Developer Experience
+            </div>
+            
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight mb-6">
+                How It Works
+            </h2>
+            
+            <p class="text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                No complex configuration files. No "magic" folders. Just standard ESM imports 
+                and a simple template directive.
+            </p>
+        </div>
+
+        <!-- The Code Island -->
+        <CodeComparison client:visible />
+
+    </div>
+</section>

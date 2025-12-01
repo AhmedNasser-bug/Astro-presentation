@@ -1,0 +1,33 @@
+---
+import PayloadBreakdown from '../components/PayloadBreakdown.jsx';
+import { Layers, ArrowDownUp } from 'lucide-react';
+---
+
+<section class="relative py-32 px-6 border-b border-white/5 bg-void-950 overflow-hidden">
+    <!-- Ambient Lighting -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-astro/5 blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        
+        <!-- Header -->
+        <div class="text-center max-w-4xl mx-auto mb-20">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-astro/10 border border-astro/20 text-astro text-xs font-mono font-bold mb-8 uppercase tracking-widest">
+                <ArrowDownUp size={14} />
+                Principle in Action
+            </div>
+            
+            <h2 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-8 leading-tight">
+                What if only the <span class="text-transparent bg-clip-text bg-gradient-to-r from-astro to-indigo-400">interactive</span> parts loaded JS?
+            </h2>
+            
+            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                By treating the page as static by default, we honor the software engineering principle of 
+                <strong class="text-white">Separation of Concerns</strong>.
+            </p>
+        </div>
+
+        <!-- The Interactive Island -->
+        <PayloadBreakdown client:visible />
+
+    </div>
+</section>
