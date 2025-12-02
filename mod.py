@@ -1,7 +1,5 @@
 import os
-import re
 import sys
-import json
 
 # STRICT DEPENDENCY: Relying on the existing file_ops module.
 try:
@@ -10,95 +8,121 @@ except ImportError:
     print("[CRITICAL]: 'file_ops.py' not found. This script relies on the FileOps utility.")
     sys.exit(1)
 
-def cleanup_deployment():
+def redesign_hero_section():
     """
-    Removes backend integration features and reverts to static configuration.
+    Overhauls 'src/sections/Hero.astro' with a new Astro-themed design.
+    Features:
+    - Cosmic/Gradient typography.
+    - 'Mission Briefing' cards defining core terminology (MPA, Zero JS, Islands).
+    - Animated background elements.
     """
     ops = FileOps()
     
     # Paths
-    pkg_path = "package.json"
-    config_path = "astro.config.mjs"
-    index_path = os.path.join("src", "pages", "index.astro")
+    hero_path = os.path.join("src", "sections", "Hero.astro")
     
-    # Files/Dirs to delete
-    files_to_delete = [
-        os.path.join("src", "components", "BackendReal.jsx"),
-        os.path.join("src", "sections", "BackendRealSection.astro"),
-        os.path.join("src", "pages", "api", "hono", "[...route].js"),
-        os.path.join("src", "pages", "api", "native.js"),
-    ]
+    # New Astro-themed Hero Content
+    new_hero_content = r"""---
+import { Zap, Layout, Box, ChevronDown, ArrowRight } from 'lucide-react';
+---
+
+<section class="relative min-h-[95vh] flex flex-col items-center justify-center overflow-hidden bg-void-950 border-b border-white/5">
     
-    dirs_to_clean = [
-        os.path.join("src", "pages", "api", "hono"),
-        os.path.join("src", "pages", "api")
-    ]
+    <!-- DYNAMIC BACKGROUND -->
+    <div class="absolute inset-0 pointer-events-none">
+        <!-- The 'Astro' Gradient Orb -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-orange-500/20 via-purple-500/10 to-blue-500/20 rounded-full blur-[100px] animate-pulse-slow"></div>
+        <!-- Grid overlay -->
+        <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+    </div>
 
-    # ---------------------------------------------------------
-    # STEP 1: Remove Files
-    # ---------------------------------------------------------
-    print("--- Cleaning up files ---")
-    for file_path in files_to_delete:
-        if os.path.exists(file_path):
-            if ops.delete_file(file_path):
-                print(f"[REMOVED]: {file_path}")
-        else:
-            print(f"[INFO]: File already gone: {file_path}")
-
-    # Clean directories
-    for dir_path in dirs_to_clean:
-        if os.path.exists(dir_path) and not os.listdir(dir_path):
-            os.rmdir(dir_path)
-            print(f"[CLEANED]: Removed empty directory {dir_path}")
-
-    # ---------------------------------------------------------
-    # STEP 2: Revert index.astro
-    # ---------------------------------------------------------
-    print("\n--- Cleaning up index.astro ---")
-    content = ops.read_file(index_path)
-    if content:
-        # Remove Import
-        content = re.sub(r"import\s+BackendRealSection\s+from\s+['\"].*?BackendRealSection\.astro['\"];\n?", "", content)
-        # Remove Component
-        content = re.sub(r"\s*<BackendRealSection\s*/>\n?", "", content)
-        ops.update_file(index_path, content)
-        print("[SUCCESS]: Removed BackendRealSection from index.astro")
-
-    # ---------------------------------------------------------
-    # STEP 3: Revert package.json (Remove SSR/Backend deps)
-    # ---------------------------------------------------------
-    print("\n--- Cleaning up package.json ---")
-    pkg_content = ops.read_file(pkg_path)
-    if pkg_content:
-        pkg_json = json.loads(pkg_content)
-        deps = pkg_json.get("dependencies", {})
+    <div class="relative z-10 max-w-6xl mx-auto px-6 flex flex-col items-center text-center">
         
-        # Remove backend deps
-        keys_to_remove = ["hono", "@astrojs/node", "@astrojs/vercel"]
-        for key in keys_to_remove:
-            if key in deps:
-                del deps[key]
-                print(f"[INFO]: Removed {key}")
-        
-        pkg_json["dependencies"] = deps
-        ops.update_file(pkg_path, json.dumps(pkg_json, indent=2))
-        print("[SUCCESS]: Reverted package.json")
+        <!-- STATUS BADGE -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300 text-[10px] font-mono mb-8 backdrop-blur-md hover:bg-white/10 transition-colors cursor-default">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-astro opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-astro"></span>
+            </span>
+            MISSION: ARCHITECTURE v4.0
+        </div>
 
-    # ---------------------------------------------------------
-    # STEP 4: Revert astro.config.mjs (Back to Static)
-    # ---------------------------------------------------------
-    print("\n--- Cleaning up astro.config.mjs ---")
-    config_content = ops.read_file(config_path)
-    if config_content:
-        # Remove imports
-        config_content = re.sub(r"import\s+(node|vercel)\s+from\s+['\"]@astrojs/(node|vercel)['\"];\n?", "", config_content)
-        
-        # Remove config options
-        config_content = re.sub(r"\s*output:\s*['\"]server['\"],?", "", config_content)
-        config_content = re.sub(r"\s*adapter:\s*(node\(\{.*?\}\)|vercel\(\)),?", "", config_content, flags=re.DOTALL)
-        
-        ops.update_file(config_path, config_content)
-        print("[SUCCESS]: Reverted astro.config.mjs to static mode")
+        <!-- MAIN TITLE -->
+        <h1 class="text-5xl md:text-8xl font-black tracking-tight text-white mb-6 leading-[1.1]">
+            Islands in the <br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-astro to-purple-400">Stream</span>
+        </h1>
+
+        <!-- SUBTITLE / OPENER -->
+        <p class="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-16 leading-relaxed">
+            Welcome to the shift from <span class="text-slate-200 font-semibold decoration-dashed underline decoration-slate-600">Monoliths</span> to <span class="text-white font-bold">Islands</span>.
+            <br class="hidden md:block" />
+            We are here to explore how <strong>Partial Hydration</strong> changes the web.
+        </p>
+
+        <!-- TERMINOLOGY CARDS (The 'Brief Discussion') -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl text-left">
+            
+            <!-- TERM 1: MPA -->
+            <div class="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-orange-500/30 hover:bg-orange-500/5 transition-all duration-300">
+                <div class="flex items-center gap-3 mb-3 text-orange-400">
+                    <Layout size={20} />
+                    <h3 class="font-bold font-mono text-sm tracking-wider">MPA CORE</h3>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    <strong class="text-slate-200">Multi-Page App.</strong> The server renders HTML. The browser paints it instantly. No JS required to see content.
+                </p>
+            </div>
+
+            <!-- TERM 2: Zero JS -->
+            <div class="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
+                <div class="flex items-center gap-3 mb-3 text-astro">
+                    <Box size={20} />
+                    <h3 class="font-bold font-mono text-sm tracking-wider">ZERO JS</h3>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    <strong class="text-slate-200">HTML-First.</strong> Astro strips away all JavaScript by default. You start with 100% performance score.
+                </p>
+            </div>
+
+            <!-- TERM 3: Islands -->
+            <div class="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300">
+                <div class="flex items-center gap-3 mb-3 text-blue-400">
+                    <Zap size={20} />
+                    <h3 class="font-bold font-mono text-sm tracking-wider">ISLANDS</h3>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    <strong class="text-slate-200">Interactive Pockets.</strong> Mount UI components (React, Vue, etc.) only where interactivity is strictly needed.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-16">
+            <a href="#schematics" class="group flex items-center gap-3 px-6 py-3 bg-white text-void-950 font-bold rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                Initialize Briefing
+                <ArrowRight size={18} class="group-hover:translate-x-1 transition-transform" />
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-600 animate-bounce">
+        <span class="text-[10px] font-mono uppercase tracking-widest">Scroll to Begin</span>
+        <ChevronDown size={16} />
+    </div>
+
+</section>
+"""
+
+    if ops.update_file(hero_path, new_hero_content):
+        print("[SUCCESS]: Redesigned src/sections/Hero.astro with new aesthetic and terminology.")
+    else:
+        # Fallback if update fails or file doesn't exist
+        ops.create_file(hero_path, new_hero_content)
+        print("[SUCCESS]: Created src/sections/Hero.astro")
 
 if __name__ == "__main__":
-    cleanup_deployment()
+    redesign_hero_section()
