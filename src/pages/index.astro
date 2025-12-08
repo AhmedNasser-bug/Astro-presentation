@@ -1,54 +1,94 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-import { Zap, Layers, Box, Globe, Activity } from 'lucide-react';
+// --- COMPONENTS ---
+import PhaseNavigator from '../components/PhaseNavigator.jsx';
+import PhaseLighting from '../components/PhaseLighting.jsx';
+
+// --- SECTIONS ---
+
+// PHASE 1: THE PROBLEM
 import Hero from '../sections/Hero.astro';
-import TheSolution from '../sections/TheSolution.astro';
-import TheProblem from '../sections/TheProblem.astro';
-import BlogpostProb from '../sections/BlogpostProb.astro';
+import OverviewSection from '../sections/OverviewSection.astro';
+import TheProblem from '../sections/TheProblem.astro';       // Was ProblemSection
+import BlogpostProb from '../sections/BlogpostProb.astro';   // Was RealityCheckSection
 import ProjectAnatomy from '../sections/ProjectAnatomy.astro';
 import PrncplesSection from '../sections/PrncplesSection.astro';
+
+// PHASE 2: THE SOLUTION
+import TheSolution from '../sections/TheSolution.astro';     // Was WebsiteMockupSection
 import SeparationSection from '../sections/SeparationSection.astro';
 import HowItWorksSection from '../sections/HowItWorksSection.astro';
-import PlotTwistSection from '../sections/PlotTwistSection.astro';
-import IntegrationSection from '../sections/IntegrationSection.astro';
+
+// PHASE 3: REAL WORLD IMPACT
 import RealWorldSection from '../sections/RealWorldSection.astro';
 import RealNumbersSection from '../sections/RealNumbersSection.astro';
-import RepoSchematic from '../sections/RepoSchematic.astro';
-import TheIslands from '../sections/TheIslands.astro';
+
+// PHASE 4: ECOSYSTEM & BACKEND
+import PlotTwistSection from '../sections/PlotTwistSection.astro';
+import IntegrationSection from '../sections/IntegrationSection.astro';
+import BackendSection from '../sections/BackendSection.astro';
+//import BackendRealSection from '../sections/BackendRealSection.astro';
 import IntegrationsSection from '../sections/IntegrationsSection.astro';
 import ConclusionSection from '../sections/ConclusionSection.astro';
-import BackendSection from '../sections/BackendSection.astro';
-import OverviewSection from '../sections/OverviewSection.astro';
-const pros = [
-    { title: "Islands Architecture", desc: "Component isolation. One crash doesn't sink the ship.", icon: Box, color: "text-blue-400" },
-    { title: "Zero JS Default", desc: "Pure HTML by default. JS only where strictly needed.", icon: Zap, color: "text-yellow-400" },
-    { title: "UI Agnostic", desc: "React, Vue, Svelte running side-by-side.", icon: Layers, color: "text-purple-400" },
-    { title: "Edge Ready", desc: "Server-side rendering for global distribution.", icon: Globe, color: "text-emerald-400" }
-];
 ---
 
-<Layout title="Astro showcase">
+<Layout title="Astro Architecture">
     
-    <div id='hero'><Hero/></div>
-    <OverviewSection/>
-    <div id='problem'><TheProblem/></div>
-    <div id='solution'><TheSolution/></div>
-    <BlogpostProb/>
-    <ProjectAnatomy />
-    <PrncplesSection/>
-    <SeparationSection/>
-    <HowItWorksSection/>
-    <div id='agnostic'><PlotTwistSection/></div>
-	<TheIslands />
-    <RepoSchematic/>
-    <IntegrationSection/>
-    <RealWorldSection/>
-    <RealNumbersSection/>
-    <div id='ecosystem'><IntegrationsSection/></div>
-    <BackendSection/>    <div id='conclusion'><ConclusionSection/></div>
-    
+    <!-- Global Visual Managers -->
+    <PhaseLighting client:load />
+    <PhaseNavigator client:idle />
 
+    <!-- ========================================== -->
+    <!-- PHASE 1: THE PROBLEM (Red/Orange Vignette) -->
+    <!-- ========================================== -->
+    <div data-phase="1">
+        <div id="hero"><Hero /></div>
+        <div id="overview"><OverviewSection /></div>
+        <div id="problem">
+            <TheProblem />
+            <BlogpostProb />
+            <ProjectAnatomy />
+            <PrncplesSection />
+        </div>
+    </div>
 
-    
+    <!-- ========================================== -->
+    <!-- PHASE 2: THE SOLUTION (Astro Purple Vignette) -->
+    <!-- ========================================== -->
+    <div data-phase="2">
+        <div id="solution">
+            <TheSolution />
+            <SeparationSection />
+            <HowItWorksSection />
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PHASE 3: IMPACT (Green/Emerald Vignette) -->
+    <!-- ========================================== -->
+    <div data-phase="3">
+        <div id="impact">
+            <RealWorldSection />
+            <RealNumbersSection />
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PHASE 4: PROS & ECOSYSTEM (Blue Vignette) -->
+    <!-- ========================================== -->
+    <div data-phase="4">
+        <div id="agnostic">
+            <PlotTwistSection />
+            <IntegrationSection />
+        </div>
+        <div id="backend">
+            <BackendSection />
+        </div>
+        <div id="ecosystem">
+            <IntegrationsSection />
+            <ConclusionSection />
+        </div>
+    </div>
+
 </Layout>

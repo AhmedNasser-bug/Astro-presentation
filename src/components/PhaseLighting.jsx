@@ -1,25 +1,4 @@
-import os
-import sys
-
-# STRICT DEPENDENCY: Relying on the existing file_ops module.
-try:
-    from file_ops import FileOps
-except ImportError:
-    print("[CRITICAL]: 'file_ops.py' not found. This script relies on the FileOps utility.")
-    sys.exit(1)
-
-def adjust_vignette_strength():
-    """
-    Reduces the intensity of the vignette effect in PhaseLighting.jsx.
-    """
-    ops = FileOps()
-    
-    components_dir = os.path.join("src", "components")
-    file_path = os.path.join(components_dir, "PhaseLighting.jsx")
-    
-    # Updated component code with significantly reduced opacity
-    # Changed /10 to /5 and /20 to /10 for a much softer touch
-    updated_jsx = r"""import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const phases = {
@@ -96,12 +75,3 @@ export default function PhaseLighting() {
     </>
   );
 }
-"""
-
-    if ops.update_file(file_path, updated_jsx):
-        print("[SUCCESS]: Reduced vignette strength in src/components/PhaseLighting.jsx")
-    else:
-        print("[ERROR]: Failed to update file.")
-
-if __name__ == "__main__":
-    adjust_vignette_strength()
