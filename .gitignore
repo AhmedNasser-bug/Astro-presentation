@@ -3,5 +3,5 @@ node_modules/
 dist/
 .astro/
 .env
-mod.py
-file_ops.py
+./mod.py
+./file_ops.py

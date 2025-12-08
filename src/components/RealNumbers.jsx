@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, TrendingUp, Timer, HardDrive, Database, Server, ExternalLink } from 'lucide-react';
+import { BarChart3, TrendingUp, Timer, HardDrive, Database, Server, ExternalLink, ArrowUpRight } from 'lucide-react';
 
 const MetricRow = ({ label, before, after, unit, improvement, delay }) => {
   return (
@@ -34,33 +34,40 @@ const MetricRow = ({ label, before, after, unit, improvement, delay }) => {
 
 const CaseStudyCard = ({ title, logo, metrics, delay, link }) => {
   return (
-    <motion.div 
+    <motion.a 
+      href={link} 
+      target="_blank" 
+      rel="noopener noreferrer"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay, duration: 0.6 }}
-      className="bg-void-950 border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group"
+      whileHover={{ y: -5 }}
+      className="block bg-void-950 border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group cursor-pointer hover:border-emerald-500/30 transition-all duration-300"
     >
+      {/* Hover Glow */}
+      <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
       {/* Header */}
-      <div className="p-6 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-white/5 text-white">
+      <div className="p-6 bg-white/[0.02] border-b border-white/5 flex items-center justify-between relative z-10">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-white/5 text-white group-hover:bg-emerald-500/10 group-hover:text-emerald-400 transition-colors">
             {logo}
           </div>
           <div>
-            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">CASE STUDY</div>
-            <a 
-              href={link} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-lg font-bold text-white hover:text-emerald-400 transition-colors flex items-center gap-2 group/link"
-            >
-              {title}
-              <ExternalLink size={14} className="opacity-0 group-hover/link:opacity-100 transition-opacity" />
-            </a>
+            <div className="flex items-center gap-2 mb-0.5">
+                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest group-hover:text-emerald-400/80 transition-colors">CASE STUDY</div>
+                <ArrowUpRight size={12} className="text-slate-600 group-hover:text-emerald-400 transition-colors" />
+            </div>
+            <h3 className="text-xl font-bold text-white group-hover:underline decoration-emerald-500/30 underline-offset-4 decoration-2">{title}</h3>
           </div>
         </div>
-        <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"></div>
+        
+        {/* Status Indicator */}
+        <div className="flex flex-col items-end gap-1">
+            <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981] animate-pulse"></div>
+            <span className="text-[10px] text-emerald-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0 duration-300">Verified</span>
+        </div>
       </div>
 
       {/* Metrics Body */}
@@ -72,7 +79,7 @@ const CaseStudyCard = ({ title, logo, metrics, delay, link }) => {
 
       {/* Background Grid */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
-    </motion.div>
+    </motion.a>
   );
 };
 
@@ -85,8 +92,8 @@ export default function RealNumbers() {
         {/* CASE STUDY 1: NETLIFY */}
         <CaseStudyCard 
           title="Netlify Docs"
-          link="https://www.netlify.com/blog/why-netlify-selected-astro-for-its-developer-hub-and-marketing-site/"
-          logo={<Server size={20} />}
+          link="https://astro.build/blog/netlifys-migration-story/"
+          logo={<Server size={24} />}
           delay={0.2}
           metrics={[
             { label: "Build Time", before: "14 min", after: "2 min", improvement: "-86%" },
@@ -99,7 +106,7 @@ export default function RealNumbers() {
         <CaseStudyCard 
           title="Firebase Blog"
           link="https://astro.build/case-studies/firebase/"
-          logo={<Database size={20} />}
+          logo={<Database size={24} />}
           delay={0.4}
           metrics={[
             { label: "JS Payload", before: "370 KB", after: "22 KB", improvement: "-94%" },
