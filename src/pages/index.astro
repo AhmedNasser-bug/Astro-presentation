@@ -19,6 +19,7 @@ import TheIslands from '../sections/TheIslands.astro';
 import IntegrationsSection from '../sections/IntegrationsSection.astro';
 import ConclusionSection from '../sections/ConclusionSection.astro';
 import BackendSection from '../sections/BackendSection.astro';
+import OverviewSection from '../sections/OverviewSection.astro';
 const pros = [
     { title: "Islands Architecture", desc: "Component isolation. One crash doesn't sink the ship.", icon: Box, color: "text-blue-400" },
     { title: "Zero JS Default", desc: "Pure HTML by default. JS only where strictly needed.", icon: Zap, color: "text-yellow-400" },
@@ -29,22 +30,23 @@ const pros = [
 
 <Layout title="Astro showcase">
     
-    <Hero/>
-    <TheProblem/>
-    <TheSolution/>
+    <div id='hero'><Hero/></div>
+    <OverviewSection/>
+    <div id='problem'><TheProblem/></div>
+    <div id='solution'><TheSolution/></div>
     <BlogpostProb/>
     <ProjectAnatomy />
     <PrncplesSection/>
     <SeparationSection/>
     <HowItWorksSection/>
-    <PlotTwistSection/>
+    <div id='agnostic'><PlotTwistSection/></div>
 	<TheIslands />
     <RepoSchematic/>
     <IntegrationSection/>
     <RealWorldSection/>
     <RealNumbersSection/>
-    <IntegrationsSection/>
-    <BackendSection/>    <ConclusionSection/>
+    <div id='ecosystem'><IntegrationsSection/></div>
+    <BackendSection/>    <div id='conclusion'><ConclusionSection/></div>
     
 
 

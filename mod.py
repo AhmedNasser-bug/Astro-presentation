@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 
 # STRICT DEPENDENCY: Relying on the existing file_ops module.
@@ -8,121 +9,188 @@ except ImportError:
     print("[CRITICAL]: 'file_ops.py' not found. This script relies on the FileOps utility.")
     sys.exit(1)
 
-def redesign_hero_section():
+def add_navigation_module():
     """
-    Overhauls 'src/sections/Hero.astro' with a new Astro-themed design.
-    Features:
-    - Cosmic/Gradient typography.
-    - 'Mission Briefing' cards defining core terminology (MPA, Zero JS, Islands).
-    - Animated background elements.
+    Creates a Phase Navigation sidebar and injects it into the Layout.
     """
     ops = FileOps()
     
     # Paths
-    hero_path = os.path.join("src", "sections", "Hero.astro")
+    components_dir = os.path.join("src", "components")
+    layout_path = os.path.join("src", "layouts", "Layout.astro")
     
-    # New Astro-themed Hero Content
-    new_hero_content = r"""---
-import { Zap, Layout, Box, ChevronDown, ArrowRight } from 'lucide-react';
----
+    # ---------------------------------------------------------
+    # ARTIFACT 1: The Navigator Component (React)
+    # ---------------------------------------------------------
+    navigator_jsx = r"""import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Flag, Activity, Code2, Puzzle, Server, Database, Rocket } from 'lucide-react';
 
-<section class="relative min-h-[95vh] flex flex-col items-center justify-center overflow-hidden bg-void-950 border-b border-white/5">
-    
-    <!-- DYNAMIC BACKGROUND -->
-    <div class="absolute inset-0 pointer-events-none">
-        <!-- The 'Astro' Gradient Orb -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-orange-500/20 via-purple-500/10 to-blue-500/20 rounded-full blur-[100px] animate-pulse-slow"></div>
-        <!-- Grid overlay -->
-        <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-    </div>
+const phases = [
+  { id: 'hero', label: 'Briefing', icon: Flag },
+  { id: 'problem', label: 'Problem', icon: Activity },
+  { id: 'solution', label: 'Solution', icon: Code2 },
+  { id: 'agnostic', label: 'Agnosticism', icon: Puzzle },
+  { id: 'backend', label: 'Backend', icon: Server },
+  { id: 'ecosystem', label: 'Ecosystem', icon: Database },
+  { id: 'conclusion', label: 'Liftoff', icon: Rocket },
+];
 
-    <div class="relative z-10 max-w-6xl mx-auto px-6 flex flex-col items-center text-center">
+export default function PhaseNavigator() {
+  const [activeId, setActiveId] = useState('hero');
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.2, rootMargin: '-20% 0px -50% 0px' }
+    );
+
+    phases.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden xl:flex flex-col gap-4">
+      {phases.map((phase) => {
+        const isActive = activeId === phase.id;
+        const Icon = phase.icon;
         
-        <!-- STATUS BADGE -->
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300 text-[10px] font-mono mb-8 backdrop-blur-md hover:bg-white/10 transition-colors cursor-default">
-            <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-astro opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-astro"></span>
+        return (
+          <button
+            key={phase.id}
+            onClick={() => scrollTo(phase.id)}
+            className="group relative flex items-center justify-end"
+          >
+            {/* Label Tooltip */}
+            <span 
+              className={`
+                absolute right-12 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300
+                ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0'}
+                bg-void-950 border border-white/10 text-white shadow-xl
+              `}
+            >
+              {phase.label}
             </span>
-            MISSION: ARCHITECTURE v4.0
-        </div>
 
-        <!-- MAIN TITLE -->
-        <h1 class="text-5xl md:text-8xl font-black tracking-tight text-white mb-6 leading-[1.1]">
-            Islands in the <br />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-astro to-purple-400">Stream</span>
-        </h1>
-
-        <!-- SUBTITLE / OPENER -->
-        <p class="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-16 leading-relaxed">
-            Welcome to the shift from <span class="text-slate-200 font-semibold decoration-dashed underline decoration-slate-600">Monoliths</span> to <span class="text-white font-bold">Islands</span>.
-            <br class="hidden md:block" />
-            We are here to explore how <strong>Partial Hydration</strong> changes the web.
-        </p>
-
-        <!-- TERMINOLOGY CARDS (The 'Brief Discussion') -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl text-left">
-            
-            <!-- TERM 1: MPA -->
-            <div class="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-orange-500/30 hover:bg-orange-500/5 transition-all duration-300">
-                <div class="flex items-center gap-3 mb-3 text-orange-400">
-                    <Layout size={20} />
-                    <h3 class="font-bold font-mono text-sm tracking-wider">MPA CORE</h3>
-                </div>
-                <p class="text-sm text-slate-400 leading-relaxed">
-                    <strong class="text-slate-200">Multi-Page App.</strong> The server renders HTML. The browser paints it instantly. No JS required to see content.
-                </p>
+            {/* Icon Circle */}
+            <div 
+              className={`
+                w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-500 relative overflow-hidden
+                ${isActive 
+                  ? 'bg-white text-void-950 border-white shadow-[0_0_20px_rgba(255,255,255,0.5)] scale-110' 
+                  : 'bg-void-950/50 text-slate-500 border-white/10 hover:border-white/30 hover:text-white backdrop-blur-md'
+                }
+              `}
+            >
+              <Icon size={isActive ? 18 : 16} strokeWidth={isActive ? 2.5 : 2} />
+              
+              {/* Active Pulse Ring */}
+              {isActive && (
+                <span className="absolute inset-0 rounded-full border-2 border-white animate-ping opacity-20"></span>
+              )}
             </div>
-
-            <!-- TERM 2: Zero JS -->
-            <div class="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 hover:bg-purple-500/5 transition-all duration-300">
-                <div class="flex items-center gap-3 mb-3 text-astro">
-                    <Box size={20} />
-                    <h3 class="font-bold font-mono text-sm tracking-wider">ZERO JS</h3>
-                </div>
-                <p class="text-sm text-slate-400 leading-relaxed">
-                    <strong class="text-slate-200">HTML-First.</strong> Astro strips away all JavaScript by default. You start with 100% performance score.
-                </p>
-            </div>
-
-            <!-- TERM 3: Islands -->
-            <div class="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300">
-                <div class="flex items-center gap-3 mb-3 text-blue-400">
-                    <Zap size={20} />
-                    <h3 class="font-bold font-mono text-sm tracking-wider">ISLANDS</h3>
-                </div>
-                <p class="text-sm text-slate-400 leading-relaxed">
-                    <strong class="text-slate-200">Interactive Pockets.</strong> Mount UI components (React, Vue, etc.) only where interactivity is strictly needed.
-                </p>
-            </div>
-
-        </div>
-
-        <!-- CTA -->
-        <div class="mt-16">
-            <a href="#schematics" class="group flex items-center gap-3 px-6 py-3 bg-white text-void-950 font-bold rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                Initialize Briefing
-                <ArrowRight size={18} class="group-hover:translate-x-1 transition-transform" />
-            </a>
-        </div>
-
+          </button>
+        );
+      })}
+      
+      {/* Connecting Line */}
+      <div className="absolute right-5 top-0 bottom-0 w-px bg-white/5 -z-10 rounded-full">
+        <motion.div 
+            className="w-full bg-gradient-to-b from-transparent via-white/20 to-transparent"
+            style={{ height: '30%', top: '0%' }} // Could animate this to follow scroll if needed, but static gradient is fine for now
+            animate={{ top: ['0%', '100%'] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
     </div>
-
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-600 animate-bounce">
-        <span class="text-[10px] font-mono uppercase tracking-widest">Scroll to Begin</span>
-        <ChevronDown size={16} />
-    </div>
-
-</section>
+  );
+}
 """
+    ops.create_file(os.path.join(components_dir, "PhaseNavigator.jsx"), navigator_jsx)
 
-    if ops.update_file(hero_path, new_hero_content):
-        print("[SUCCESS]: Redesigned src/sections/Hero.astro with new aesthetic and terminology.")
-    else:
-        # Fallback if update fails or file doesn't exist
-        ops.create_file(hero_path, new_hero_content)
-        print("[SUCCESS]: Created src/sections/Hero.astro")
+    # ---------------------------------------------------------
+    # OPERATION 2: Inject into Layout (Global Persistence)
+    # ---------------------------------------------------------
+    layout_content = ops.read_file(layout_path)
+    if layout_content:
+        # Add ID to body for potential scroll spy context, though we target sections
+        
+        # Inject the component usage
+        # We assume there's a <body> tag. We want to put it right after opening body or before slot.
+        # But wait, this is a React component, so we need to use client:load or client:idle.
+        # However, Layout.astro might not import React.
+        
+        # 1. Add Import
+        if "import PhaseNavigator" not in layout_content:
+            layout_content = layout_content.replace("---", "---\nimport PhaseNavigator from '../components/PhaseNavigator.jsx';", 1)
+
+        # 2. Add Component to Body
+        if "<PhaseNavigator" not in layout_content:
+            layout_content = layout_content.replace("<body class=\"", "<body class=\"") # anchor
+            # Insert right after opening body tag for fixed positioning
+            layout_content = re.sub(r'(<body.*?>)', r'\1\n        <PhaseNavigator client:idle />', layout_content)
+
+        ops.update_file(layout_path, layout_content)
+        print("[SUCCESS]: Injected PhaseNavigator into Layout.astro")
+
+    # ---------------------------------------------------------
+    # OPERATION 3: Add IDs to Sections in Index (For ScrollSpy)
+    # ---------------------------------------------------------
+    # We need to ensure the sections in index.astro have the IDs expected by the navigator:
+    # hero, problem, solution, agnostic, backend, ecosystem, conclusion
+    # Since the sections are components, we need to wrap them in divs with IDs or modify the components.
+    # Wrapping in divs in index.astro is safer/easier than modifying every section file.
+
+    index_path = os.path.join("src", "pages", "index.astro")
+    index_content = ops.read_file(index_path)
+    
+    if index_content:
+        # Mapping components to IDs
+        replacements = [
+            ("<Hero/>", "<div id='hero'><Hero/></div>"),
+            ("<Hero />", "<div id='hero'><Hero /></div>"),
+            
+            ("<TheProblem/>", "<div id='problem'><TheProblem/></div>"),
+            ("<TheProblem />", "<div id='problem'><TheProblem /></div>"),
+            
+            ("<TheSolution/>", "<div id='solution'><TheSolution/></div>"),
+            ("<TheSolution />", "<div id='solution'><TheSolution /></div>"),
+            
+            ("<PlotTwistSection/>", "<div id='agnostic'><PlotTwistSection/></div>"),
+            ("<PlotTwistSection />", "<div id='agnostic'><PlotTwistSection /></div>"),
+            
+            ("<BackendRealSection/>", "<div id='backend'><BackendRealSection/></div>"),
+            ("<BackendRealSection />", "<div id='backend'><BackendRealSection /></div>"),
+            
+            ("<IntegrationsSection/>", "<div id='ecosystem'><IntegrationsSection/></div>"),
+            ("<IntegrationsSection />", "<div id='ecosystem'><IntegrationsSection /></div>"),
+            
+            ("<ConclusionSection/>", "<div id='conclusion'><ConclusionSection/></div>"),
+            ("<ConclusionSection />", "<div id='conclusion'><ConclusionSection /></div>"),
+        ]
+
+        for old, new in replacements:
+            # Simple check if already wrapped
+            if f"id='{new.split('=')[1].split('>')[0].strip('\'')}'" not in index_content:
+                index_content = index_content.replace(old, new)
+
+        ops.update_file(index_path, index_content)
+        print("[SUCCESS]: Added ScrollSpy IDs to index.astro")
 
 if __name__ == "__main__":
-    redesign_hero_section()
+    add_navigation_module()
