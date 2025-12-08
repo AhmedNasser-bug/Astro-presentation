@@ -1,28 +1,4 @@
-import os
-import re
-import sys
-
-# STRICT DEPENDENCY: Relying on the existing file_ops module.
-try:
-    from file_ops import FileOps
-except ImportError:
-    print("[CRITICAL]: 'file_ops.py' not found. This script relies on the FileOps utility.")
-    sys.exit(1)
-
-def add_phase_indicator_module():
-    """
-    Creates a Phase Indicator component and injects it into the Layout.
-    """
-    ops = FileOps()
-    
-    # Paths
-    components_dir = os.path.join("src", "components")
-    layout_path = os.path.join("src", "layouts", "Layout.astro")
-    
-    # ---------------------------------------------------------
-    # ARTIFACT 1: The Phase Indicator Component (React)
-    # ---------------------------------------------------------
-    indicator_jsx = r"""import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const phaseMap = {
@@ -116,29 +92,3 @@ export default function PhaseIndicator() {
     </AnimatePresence>
   );
 }
-"""
-    ops.create_file(os.path.join(components_dir, "PhaseIndicator.jsx"), indicator_jsx)
-
-    # ---------------------------------------------------------
-    # OPERATION 2: Inject into Layout (Global Persistence)
-    # ---------------------------------------------------------
-    layout_content = ops.read_file(layout_path)
-    if layout_content:
-        # 1. Add Import
-        if "import PhaseIndicator" not in layout_content:
-            layout_content = layout_content.replace("---", "---\nimport PhaseIndicator from '../components/PhaseIndicator.jsx';", 1)
-
-        # 2. Add Component to Body
-        if "<PhaseIndicator" not in layout_content:
-            # Place alongside PhaseNavigator
-            if "<PhaseNavigator" in layout_content:
-                layout_content = layout_content.replace("<PhaseNavigator", "<PhaseIndicator client:idle />\n        <PhaseNavigator")
-            else:
-                 # Fallback
-                 layout_content = re.sub(r'(<body.*?>)', r'\1\n        <PhaseIndicator client:idle />', layout_content)
-
-        ops.update_file(layout_path, layout_content)
-        print("[SUCCESS]: Injected PhaseIndicator into Layout.astro")
-
-if __name__ == "__main__":
-    add_phase_indicator_module()

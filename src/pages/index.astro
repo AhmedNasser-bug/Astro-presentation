@@ -43,10 +43,10 @@ import ConclusionSection from '../sections/ConclusionSection.astro';
     <!-- PHASE 1: THE PROBLEM (Red/Orange Vignette) -->
     <!-- ========================================== -->
     <div data-phase="1">
-        <div id="hero"><Hero /></div>
+        <div id="hero"><div id='hero'><Hero /></div></div>
         <div id="overview"><OverviewSection /></div>
         <div id="problem">
-            <TheProblem />
+            <div id='problem'><TheProblem /></div>
             <BlogpostProb />
             <ProjectAnatomy />
             <PrncplesSection />
@@ -58,7 +58,7 @@ import ConclusionSection from '../sections/ConclusionSection.astro';
     <!-- ========================================== -->
     <div data-phase="2">
         <div id="solution">
-            <TheSolution />
+            <div id='solution'><TheSolution /></div>
             <SeparationSection />
             <HowItWorksSection />
         </div>
@@ -79,15 +79,15 @@ import ConclusionSection from '../sections/ConclusionSection.astro';
     <!-- ========================================== -->
     <div data-phase="4">
         <div id="agnostic">
-            <PlotTwistSection />
+            <div id='agnostic'><PlotTwistSection /></div>
             <IntegrationSection />
         </div>
         <div id="backend">
             <BackendSection />
         </div>
         <div id="ecosystem">
-            <IntegrationsSection />
-            <ConclusionSection />
+            <div id='ecosystem'><IntegrationsSection /></div>
+            <div id='conclusion'><ConclusionSection /></div>
         </div>
     </div>
 
