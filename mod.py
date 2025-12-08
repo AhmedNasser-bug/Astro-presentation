@@ -1,107 +1,93 @@
-import os
+import subprocess
 import sys
+import os
 
 # STRICT DEPENDENCY: Relying on the existing file_ops module.
+# Even though this script is primarily Git-based, we maintain the project's architectural pattern.
 try:
     from file_ops import FileOps
 except ImportError:
-    print("[CRITICAL]: 'file_ops.py' not found. This script relies on the FileOps utility.")
-    sys.exit(1)
+    pass # Non-critical for git operations, but noted.
 
-def adjust_vignette_strength():
+def run_git_cmd(args, error_msg="Git command failed"):
     """
-    Reduces the intensity of the vignette effect in PhaseLighting.jsx.
+    Helper to run git commands and handle output.
     """
-    ops = FileOps()
+    try:
+        result = subprocess.run(
+            args,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        return result.stdout.strip()
+    except subprocess.CalledProcessError as e:
+        print(f"[ERROR]: {error_msg}")
+        print(f"Details: {e.stderr.strip()}")
+        return None
+
+def merge_to_deployment_branch():
+    """
+    Orchestrates the merge from the current branch (e.g., 'deploy-ssr') 
+    into a 'deployment' branch.
+    """
+    print("--- 🔄 Starting Deployment Merge Workflow ---")
+
+    # 1. Verify Git Repo
+    if not os.path.exists(".git"):
+        print("[CRITICAL]: This is not a git repository. Run 'git init' first.")
+        return
+
+    # 2. Identify Current Branch
+    current_branch = run_git_cmd(["git", "branch", "--show-current"], "Could not get current branch")
+    if not current_branch: return
     
-    components_dir = os.path.join("src", "components")
-    file_path = os.path.join(components_dir, "PhaseLighting.jsx")
+    print(f"[INFO]: Current working branch is '{current_branch}'")
     
-    # Updated component code with significantly reduced opacity
-    # Changed /10 to /5 and /20 to /10 for a much softer touch
-    updated_jsx = r"""import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+    if current_branch == "deployment":
+        print("[INFO]: You are already on the deployment branch.")
+        return
 
-const phases = {
-  1: "from-red-600/5 via-transparent to-transparent",        // Problem: Very Subtle Red
-  2: "from-purple-600/5 via-transparent to-transparent",     // Solution: Very Subtle Purple
-  3: "from-emerald-600/5 via-transparent to-transparent",    // Impact: Very Subtle Green
-  4: "from-blue-600/5 via-transparent to-transparent"        // Ecosystem: Very Subtle Blue
-};
-
-// Bottom glow also reduced
-const bottomPhases = {
-  1: "from-transparent via-transparent to-orange-900/10",
-  2: "from-transparent via-transparent to-pink-900/10",
-  3: "from-transparent via-transparent to-teal-900/10",
-  4: "from-transparent via-transparent to-indigo-900/10"
-};
-
-export default function PhaseLighting() {
-  const [activePhase, setActivePhase] = useState(1);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const phaseEls = document.querySelectorAll('[data-phase]');
-      let current = 1;
-
-      phaseEls.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        // Trigger when the section takes up the majority of the viewport
-        if (rect.top <= window.innerHeight * 0.5 && rect.bottom >= window.innerHeight * 0.5) {
-          current = parseInt(el.getAttribute('data-phase'));
-        }
-      });
-
-      setActivePhase(current);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Trigger once on load
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <>
-        {/* Top Vignette (Overlay) - Reduced Intensity */}
-        <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden">
-            <AnimatePresence mode="popLayout">
-                <motion.div
-                    key={`top-${activePhase}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1.5 }}
-                    className={`absolute inset-0 bg-gradient-to-b ${phases[activePhase] || phases[1]}`}
-                />
-            </AnimatePresence>
-        </div>
-
-        {/* Bottom Vignette (Overlay) - Reduced Intensity */}
-        <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden">
-             <AnimatePresence mode="popLayout">
-                <motion.div
-                    key={`btm-${activePhase}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1.5 }}
-                    className={`absolute inset-0 bg-gradient-to-b ${bottomPhases[activePhase] || bottomPhases[1]}`}
-                />
-            </AnimatePresence>
-        </div>
-        
-        {/* Global Noise Texture - Reduced Opacity */}
-        <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.02] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-    </>
-  );
-}
-"""
-
-    if ops.update_file(file_path, updated_jsx):
-        print("[SUCCESS]: Reduced vignette strength in src/components/PhaseLighting.jsx")
+    # 3. Safe Commit (Ensure working tree is clean)
+    status = run_git_cmd(["git", "status", "--porcelain"], "Could not check status")
+    if status:
+        print("[WARN]: Uncommitted changes detected. Committing them now...")
+        run_git_cmd(["git", "add", "."], "Failed to stage files")
+        run_git_cmd(["git", "commit", "-m", f"chore: Save work on {current_branch} before merge"], "Failed to commit")
+        print("[SUCCESS]: Changes committed.")
     else:
-        print("[ERROR]: Failed to update file.")
+        print("[INFO]: Working tree is clean.")
+
+    # 4. Check/Create Deployment Branch
+    # We check if 'deployment' exists in the local branch list
+    branches = run_git_cmd(["git", "branch", "--list", "deployment"], "Failed to list branches")
+    
+    if not branches:
+        print("[ACTION]: 'deployment' branch not found. Creating it...")
+        # Create deployment branch off current branch
+        run_git_cmd(["git", "branch", "deployment"], "Failed to create deployment branch")
+    else:
+        print("[INFO]: 'deployment' branch exists.")
+
+    # 5. Perform the Merge
+    print(f"[ACTION]: Switching to 'deployment'...")
+    if run_git_cmd(["git", "checkout", "deployment"], "Failed to checkout deployment") is None: return
+
+    print(f"[ACTION]: Merging '{current_branch}' into 'deployment'...")
+    # Using --no-ff to create a merge commit for history visibility
+    merge_out = run_git_cmd(["git", "merge", "--no-ff", current_branch, "-m", f"merge: Update deployment from {current_branch}"], "Merge failed")
+    
+    if merge_out is not None:
+        print("[SUCCESS]: Merge successful!")
+        print("-" * 30)
+        print(f"[NEXT STEP]: Run the following command to push to your host:")
+        print(f"            git push origin deployment")
+        print("-" * 30)
+    else:
+        print("[CRITICAL]: Merge conflict detected. Please resolve manually.")
+        # Attempt to switch back to safety
+        run_git_cmd(["git", "checkout", current_branch], "Failed to revert branch")
 
 if __name__ == "__main__":
-    adjust_vignette_strength()
+    merge_to_deployment_branch()
